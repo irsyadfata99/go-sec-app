@@ -37,8 +37,8 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 // Reservation is the handler for the reservation page
-func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{})
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {    
+    render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
 
@@ -52,7 +52,8 @@ func (m *Repository) MajorSuite(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "majors.page.tmpl", &models.TemplateData{})
 }
 
-// SearchAvailability is the handler for the search-availability page
-func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "search-availbility.page.tmpl", &models.TemplateData{})
-}
+// Fix this functionfunc (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
+	func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
+		// Change this from "search-availbility.page.tmpl" to "search-availability.page.tmpl"
+		render.RenderTemplate(w, "search-availability.page.tmpl", &models.TemplateData{})
+	}

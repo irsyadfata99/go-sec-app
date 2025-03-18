@@ -1,5 +1,273 @@
 {{template "base" .}}
 
-{{define "content"}}
+{{define "title"}}Reservation{{ end }}
 
+{{define "content"}}
+<!-- Reservation Header -->
+<section class="section reservation-header py-5 bg-light">
+  <div class="container pt-5 mt-5">
+    <div class="row text-center">
+      <div class="col-12 animate__animated animate__fadeInDown">
+        <h1 class="display-4 fw-bold">Make a Reservation</h1>
+        <div
+          class="divider mx-auto my-4"
+          style="width: 80px; height: 3px; background-color: #0dcaf0"
+        ></div>
+        <p class="lead">
+          Book your stay with us and enjoy a memorable experience
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reservation Form Section -->
+<section class="section reservation-form py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div
+          class="card border-0 shadow-lg rounded-3 animate__animated animate__fadeInUp"
+        >
+          <div class="card-body p-4 p-md-5">
+            <form id="reservationForm">
+              <!-- Personal Information -->
+              <h4 class="mb-4 text-info">Personal Information</h4>
+              <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <label for="firstName" class="form-label">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    placeholder="Enter your first name"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    placeholder="Enter your last name"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    placeholder="Enter your phone number"
+                    required
+                  />
+                </div>
+              </div>
+
+              <hr class="my-4" />
+
+              <!-- Reservation Details -->
+              <h4 class="mb-4 text-info">Reservation Details</h4>
+              <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <label for="checkIn" class="form-label">Check-In Date</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control datepicker"
+                      id="checkIn"
+                      placeholder="Select date"
+                      required
+                    />
+                    <span class="input-group-text"
+                      ><i class="bi bi-calendar"></i
+                    ></span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="checkOut" class="form-label"
+                    >Check-Out Date</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control datepicker"
+                      id="checkOut"
+                      placeholder="Select date"
+                      required
+                    />
+                    <span class="input-group-text"
+                      ><i class="bi bi-calendar"></i
+                    ></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <label for="adults" class="form-label"
+                    >Number of Adults</label
+                  >
+                  <select class="form-select" id="adults" required>
+                    <option value="" selected disabled>Select number</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5+</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="children" class="form-label"
+                    >Number of Children</label
+                  >
+                  <select class="form-select" id="children">
+                    <option value="0" selected>0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4+</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="roomType" class="form-label">Room Type</label>
+                <select class="form-select" id="roomType" required>
+                  <option value="" selected disabled>Select room type</option>
+                  <option value="standard">Standard Room</option>
+                  <option value="deluxe">Deluxe Room</option>
+                  <option value="suite">Executive Suite</option>
+                  <option value="family">Family Room</option>
+                  <option value="presidential">Presidential Suite</option>
+                </select>
+              </div>
+
+              <hr class="my-4" />
+
+              <!-- Special Requests -->
+              <h4 class="mb-4 text-info">Special Requests</h4>
+              <div class="mb-4">
+                <label for="specialRequests" class="form-label"
+                  >Any special requests or preferences?</label
+                >
+                <textarea
+                  class="form-control"
+                  id="specialRequests"
+                  rows="4"
+                  placeholder="Enter any special requests or preferences here..."
+                ></textarea>
+              </div>
+
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="earlyCheckIn"
+                  />
+                  <label class="form-check-label" for="earlyCheckIn">
+                    Request early check-in (subject to availability)
+                  </label>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="lateCheckOut"
+                  />
+                  <label class="form-check-label" for="lateCheckOut">
+                    Request late check-out (subject to availability)
+                  </label>
+                </div>
+              </div>
+
+              <hr class="my-4" />
+
+              <!-- Terms and Conditions -->
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="terms"
+                    required
+                  />
+                  <label class="form-check-label" for="terms">
+                    I agree to the
+                    <a href="#" class="text-info">terms and conditions</a>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-info btn-lg w-100 py-3">
+                Confirm Reservation
+                <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="row mt-5">
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-info-circle-fill text-info fs-1 mb-3"></i>
+            <h4>Reservation Policy</h4>
+            <p>
+              Please note that check-in time is 3:00 PM and check-out time is
+              11:00 AM. A valid ID and credit card are required at check-in.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-credit-card-fill text-info fs-1 mb-3"></i>
+            <h4>Payment Information</h4>
+            <p>
+              We accept all major credit cards. A deposit of one night's stay is
+              required to confirm your reservation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <i class="bi bi-x-circle-fill text-info fs-1 mb-3"></i>
+            <h4>Cancellation Policy</h4>
+            <p>
+              Cancellations made 48 hours prior to check-in date receive a full
+              refund. Late cancellations may incur charges.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {{ end }}

@@ -1,0 +1,241 @@
+{{template "base" .}}
+
+{{define "title"}}Reservation{{ end }}
+
+{{define "content"}}
+<!-- Reservation Header -->
+<section class="section reservation-header py-5 bg-light">
+  <div class="container pt-5 mt-5">
+    <div class="row text-center">
+      <div class="col-12 animate__animated animate__fadeInDown">
+        <h1 class="display-4 fw-bold">Search a Reservation</h1>
+        <div
+          class="divider mx-auto my-4"
+          style="width: 80px; height: 3px; background-color: #0dcaf0"
+        ></div>
+        <p class="lead">
+          Book your stay with us and enjoy a memorable experience
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Search Availability Section -->
+<section class="section reservation-form py-5 bg-white">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center animate__animated animate__fadeInUp">
+        <h2 class="fw-bold mb-4">Search for Availability</h2>
+        <div
+          class="divider mx-auto my-4"
+          style="width: 80px; height: 3px; background-color: #0dcaf0"
+        ></div>
+
+        <form
+          action="/search-availability"
+          method="post"
+          novalidate
+          class="needs-validation"
+        >
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+          <!-- Updated this div with the id "reservation-dates" to match the JavaScript -->
+          <div class="row mb-4 justify-content-center" id="reservation-dates">
+            <div class="col-md-5 mb-3 mb-md-0">
+              <input
+                required
+                class="form-control py-3"
+                type="text"
+                name="start"
+                placeholder="Arrival Date"
+              />
+            </div>
+            <div class="col-md-5">
+              <input
+                required
+                class="form-control py-3"
+                type="text"
+                name="end"
+                placeholder="Departure Date"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-info btn-lg px-5 py-3 fw-bold">
+            Search Availability
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{define "js"}}
+<script>
+  // Prompt functionality
+  let attention = Prompt();
+
+  // Form validation
+  (function () {
+    "use strict";
+    window.addEventListener(
+      "load",
+      function () {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        let forms = document.getElementsByClassName("needs-validation");
+        // Loop over them and prevent submission
+        Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      },
+      false
+    );
+  })();
+
+  // Date picker initialization for search availability
+  const elem = document.getElementById("reservation-dates");
+  if (elem) {
+    const rangePicker = new DateRangePicker(elem, {
+      format: "yyyy-mm-dd",
+      minDate: new Date(),
+    });
+  }
+
+  // Date picker initialization for individual date fields
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkInElem = document.getElementById("checkIn");
+    const checkOutElem = document.getElementById("checkOut");
+
+    if (checkInElem) {
+      const checkInPicker = new Datepicker(checkInElem, {
+        format: "yyyy-mm-dd",
+        minDate: new Date(),
+        autohide: true,
+      });
+    }
+
+    if (checkOutElem) {
+      const checkOutPicker = new Datepicker(checkOutElem, {
+        format: "yyyy-mm-dd",
+        minDate: new Date(),
+        autohide: true,
+      });
+    }
+  });
+
+  // Notification functions
+  function notify(msg, msgType) {
+    notie.alert({
+      type: msgType,
+      text: msg,
+    });
+  }
+
+  function notifyModal(title, text, icon, confirmationButtonText) {
+    Swal.fire({
+      title: title,
+      html: text,
+      icon: icon,
+      confirmButtonText: confirmationButtonText,
+    });
+  }
+
+  // Prompt function
+  function Prompt() {
+    let toast = function (c) {
+      const { msg = "", icon = "success", position = "top-end" } = c;
+
+      const Toast = Swal.mixin({
+        toast: true,
+        title: msg,
+        position: position,
+        icon: icon,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+
+      Toast.fire({});
+    };
+
+    let success = function (c) {
+      const { msg = "", title = "", footer = "" } = c;
+
+      Swal.fire({
+        icon: "success",
+        title: title,
+        text: msg,
+        footer: footer,
+      });
+    };
+
+    let error = function (c) {
+      const { msg = "", title = "", footer = "" } = c;
+
+      Swal.fire({
+        icon: "error",
+        title: title,
+        text: msg,
+        footer: footer,
+      });
+    };
+
+    async function custom(c) {
+      const { msg = "", title = "" } = c;
+
+      const { value: formValues } = await Swal.fire({
+        title: title,
+        html: msg,
+        backdrop: false,
+        focusConfirm: false,
+        showCancelButton: true,
+        willOpen: () => {
+          const elem = document.getElementById("reservation-dates-modal");
+          const rp = new DateRangePicker(elem, {
+            format: "yyyy-mm-dd",
+            showOnFocus: true,
+            minDate: new Date(),
+          });
+        },
+        didOpen: () => {
+          document.getElementById("start").removeAttribute("disabled");
+          document.getElementById("end").removeAttribute("disabled");
+        },
+        preConfirm: () => {
+          return [
+            document.getElementById("start").value,
+            document.getElementById("end").value,
+          ];
+        },
+      });
+
+      if (formValues) {
+        Swal.fire(JSON.stringify(formValues));
+      }
+    }
+
+    return {
+      toast: toast,
+      success: success,
+      error: error,
+      custom: custom,
+    };
+  }
+</script>
+{{ end }}

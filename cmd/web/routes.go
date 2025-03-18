@@ -20,10 +20,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/generals", handlers.Repo.Generals)
 	mux.Get("/majorsuite", handlers.Repo.MajorSuite)
 	mux.Get("/search-availability", handlers.Repo.Availability)
-
-	// Make sure this points to the parent directory of your "static" folder
-	fileServer := http.FileServer(http.Dir("./templates/"))
-	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
+	mux.Get("/make-reservation", handlers.Repo.Reservation)
 
 	return mux
 }

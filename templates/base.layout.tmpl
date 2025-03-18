@@ -35,6 +35,34 @@
       href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css"
     />
     <link rel="stylesheet" href="/static/css/style.css" />
+    <style>
+      /* Add styling for active navigation links */
+      .nav-link.active {
+        position: relative;
+      }
+
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #0dcaf0; /* Using info color to match your theme */
+        display: block;
+      }
+
+      /* Additional styles for smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Adjust padding for fixed navbar */
+      section.section {
+        padding-top: 80px;
+        min-height: 50vh;
+      }
+    </style>
   </head>
   <body>
     <!-- Navbar -->
@@ -57,20 +85,20 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a href="#home" class="nav-link active">Home</a>
+              <a href="#home" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
-              <a href="#about" class="nav-link active">About</a>
+              <a href="#about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#product" class="nav-link active">Product</a>
+              <a href="#product" class="nav-link">Product</a>
             </li>
             <li class="nav-item">
-              <a href="#contact" class="nav-link active">Contact</a>
+              <a href="#contact" class="nav-link">Contact</a>
             </li>
             <!-- updated button next week -->
             <li class="nav-item login-btn-container">
-              <a href="reservation.html" class="btn btn-danger px-4 py-2"
+              <a href="/make-reservation" class="btn btn-danger px-4 py-2"
                 >Book Now</a
               >
             </li>
@@ -225,11 +253,143 @@
       crossorigin="anonymous"
     ></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script src="/static/javascript/script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Highlight active section in navbar
+        const sections = document.querySelectorAll(".section");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        // Set initial active link to home
+        const homeLink = document.querySelector('a[href="#home"]');
+        if (homeLink) {
+          homeLink.classList.add("active");
+        }
+
+        // Function to update active nav links
+        function updateActiveNav() {
+          let current = "";
+          const scrollPosition = window.pageYOffset;
+
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            // Check if current scroll position is within this section
+            if (
+              scrollPosition >= sectionTop - 150 &&
+              scrollPosition < sectionTop + sectionHeight - 150
+            ) {
+              current = section.getAttribute("id");
+            }
+          });
+
+          // If we found a current section, update the active class
+          navLinks.forEach((link) => {
+            link.classList.remove("active");
+            const href = link.getAttribute("href");
+            if (href && href.substring(1) === current) {
+              link.classList.add("active");
+            }
+          });
+        }
+
+        // Call the function on page load
+        updateActiveNav();
+
+        // Also call it on scroll
+        window.addEventListener("scroll", updateActiveNav);
+
+        // Animation on scroll
+        const animateElements = document.querySelectorAll(".animate__animated");
+
+        // Function to handle animations
+        function handleAnimations() {
+          animateElements.forEach((element) => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            // If element is in viewport
+            if (elementPosition < windowHeight - 100) {
+              if (!element.classList.contains("animate__animated--triggered")) {
+                element.classList.add("animate__animated--triggered");
+
+                // For elements with fadeInUp animation
+                if (element.classList.contains("animate__fadeInUp")) {
+                  // Reset animation by briefly removing and adding class
+                  element.classList.remove("animate__fadeInUp");
+                  setTimeout(() => {
+                    element.classList.add("animate__fadeInUp");
+                  }, 50);
+                }
+              }
+            }
+          });
+        }
+
+        // Set initial animations with a slight delay to ensure they work
+        setTimeout(() => {
+          animateElements.forEach((element) => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            // If element is already in viewport on page load
+            if (elementPosition < windowHeight) {
+              // Make sure the animation is applied
+              if (element.classList.contains("animate__fadeInUp")) {
+                element.style.opacity = "1"; // Ensure element is visible
+              }
+            }
+          });
+
+          // Run initial animation check
+          handleAnimations();
+        }, 100);
+
+        // Listen for scroll events to trigger animations
+        window.addEventListener("scroll", handleAnimations);
+      });
+
+      // Initialize datepickers
+      document.addEventListener("DOMContentLoaded", function () {
+        $(".datepicker").datepicker({
+          format: "mm/dd/yyyy",
+          autoclose: true,
+          startDate: new Date(),
+        });
+
+        // Form validation
+        document
+          .getElementById("reservationForm")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Get dates
+            const checkIn = document.getElementById("checkIn").value;
+            const checkOut = document.getElementById("checkOut").value;
+
+            if (checkIn && checkOut) {
+              // Simple validation - could be enhanced
+              const inDate = new Date(checkIn);
+              const outDate = new Date(checkOut);
+
+              if (outDate <= inDate) {
+                alert("Check-out date must be after check-in date");
+                return false;
+              }
+            }
+
+            // If validation passes
+            alert(
+              "Reservation submitted successfully! We will contact you shortly to confirm your booking."
+            );
+            this.reset();
+          });
+      });
+    </script>
   </body>
 </html>
 {{ end }}
